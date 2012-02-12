@@ -1,6 +1,17 @@
-///GREG's Code //http://urbanhonking.com/ideasfordozens/2012/01/14/machine-pareidolia-hello-little-fella-meets-facetracker/
+// Jason Stephens
+// ITP - NYU - Spring 2012
+// Computational Cameras
+//
+// Facetracking through:
+// Kyle McDonald's FaceOSC https://github.com/kylemcdonald/ofxFaceTracker
+//
+// adapted from from Greg Borenstein's 2011 example
+// http://www.gregborenstein.com/
+// https://gist.github.com/1603230
+
 import oscP5.*;
 OscP5 oscP5;
+
 PVector posePosition = new PVector();
 boolean found;
 float eyeLeftHeight;
@@ -14,7 +25,10 @@ float poseOrientationX;
 float poseOrientationY;
 float poseOrientationZ;
 float poseScale;
+
+float mouthArea;  // equals (mouthHeight * mouthWidth);
 PImage myImg;
+
 void setup() {
   size(640, 480);
   //frameRate(30);
@@ -39,22 +53,34 @@ void draw() {
   background(255);
   stroke(0);
 
-    translate(posePosition.x, posePosition.y);
-       scale(poseScale*.4);
-      image(myImg,0,-25);
-       scale(poseScale);
-    noFill();
+  translate(width - posePosition.x, posePosition.y);
+  scale(poseScale*.4);
+  image(myImg, 0, -25);
+ 
+  scale(poseScale);
+  noFill();
 
-    ellipse(-20, eyeLeftHeight * -9, 20, 7);
-    ellipse(20, eyeRightHeight * -9, 20, 7);
-    ellipse(0, 20, mouthWidth* 3, mouthHeight * 3);
-    ellipse(-5, -2, nostrilHeight,nostrilHeight);
-    ellipse(5, -2 , nostrilHeight, nostrilHeight);
-    rectMode(CENTER);
-    fill(0);
-    rect(-20, leftEyebrowHeight * -5, 20, 3);
-    rect(20, rightEyebrowHeight * -5, 20, 3);
+//eyes - mouth - nostril
+ellipse (0, 20, mouthArea, mouthArea);
+//  ellipse(-20, eyeLeftHeight * -9, 20, 7);
+//  ellipse(20, eyeRightHeight * -9, 20, 7);
+//  ellipse(0, 20, mouthWidth* 3, mouthHeight * 3);
+//  ellipse(-5, -2, nostrilHeight, nostrilHeight);
+//  ellipse(5, -2, nostrilHeight, nostrilHeight);
+  
+  // eyebrows
+//  rectMode(CENTER);
+//  fill(0);
+//  rect(-20, leftEyebrowHeight * -5, 20, 3);
+//  rect(20, rightEyebrowHeight * -5, 20, 3);
+
+
+//create a mouth AREA function to return mouth Area
+mouthArea = (mouthWidth * mouthHeight);
+
 }
+  
+  
 public void mouthWidthReceived(float w) {
   println("mouth Width: " + w);
   mouthWidth = w;
