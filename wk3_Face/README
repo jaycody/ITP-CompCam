@@ -1,0 +1,16 @@
+FaceOSC in Processing
+Computational Cameras
+ITP - NYU - Sprint 2012
+
+Using FaceTracking to Control Generative Systems in Processing:
+
+Facetracking through:
+	Kyle McDonald's FaceOSC https://github.com/kylemcdonald/ofxFaceTracker
+
+Parsing code adapted from from Greg Borenstein's 2011 example
+	http://www.gregborenstein.com/
+	https://gist.github.com/1603230
+
+Generative Algorithms inspired by Matt Pearson book:
+	Generative Art:  A Practical Guide Using Processing
+ 
