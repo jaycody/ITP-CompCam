@@ -18,8 +18,14 @@
  
  NOTES:
  locationX = amplitude * cos (angle); // where cos(angle) = 0-1
+ locationY = amplitude * sin (angle); // where sin(angle) = 0-1
  
  */
+ 
+ PVector amplitude;
+ PVector location;
+ PVector angularVelocity; 
+
 float centerX;
 float centerY;
 float radius = 100;
@@ -27,6 +33,9 @@ float moveX;
 
 float angle = 0;
 float aVelocity = .05;
+float amplitudeX = 100;
+float amplitudeY = 100;
+float theta = 0;
 
 int lastKey = 0;
 
@@ -41,51 +50,83 @@ void setup () {
 }
 
 void draw () {
+  //start by doing the math
+  //this function returns a PVector and stores it here, right???
+  // pass the angle and the angle velocity through calculations
+  //PVector angularVelocity = new PVector (angle, aVelocity);
+PVector angularVelocity = new PVector (angle, aVelocity); //initial angle = 0, angular velocity
+  PVector amplitude = new PVector (amplitudeX, amplitudeY);
+  PVector location = calculations(angularVelocity,amplitude);
 
   if (lastKey == 1) {
-    drawOscillatingX();
+    drawOscillatingX(location.x);
+  }
+  if (lastKey == 2) {
+    drawOscillatingY(location.y);
+  }
+  if (lastKey == 3) {
+    drawCircle(location); //send the location PVector (containing both X and Y coordinates
   }
 }
 
-void drawOscillatingX () {
-  // Amplitude is the maximum movement (aka radius or deviation from 0)
-  float amplitude = 100;
+// This function takes 4 argumments and returns 1 PVector
+PVector calculations (PVector _angularVelocity, PVector _amplitude) {
+  float x = _amplitude.x * cos (theta); 
+  float y = _amplitude.y * sin (theta);
+  location = new PVector (x, y);
+  theta = theta + _angularVelocity.y; // 
+  return location;
+}
 
-  // cos(angle) = 0-1 (or a percentage.  
-  //thus, at every increment angle, X is somewhere between 0 and radius)
-  float x = amplitude * cos (angle);
-
-  //now increment the angle by the velocity
-  angle = angle + aVelocity; // where velocity is distance/frame
-
+void drawOscillatingX (float _x) {
+  float x = _x;  // returned from the calculations 
   translate (centerX, centerY);
   ellipse (0, 0, 50, 50); 
   point (0, 0);
   point (x, 0);
 }
 
+void drawOscillatingY (float _y) {
+  float y = _y;
+  translate (centerX, centerY);
+  ellipse (0, 0, 50, 50); 
+  point (0, 0);
+  point (0, y);
+}
+
+void drawCircle (PVector _location) {
+  translate (centerX, centerY);
+  ellipse (0,0,50,50);
+  point (0,0);
+  point (_location.x, _location.y);
+}
+
+// this allows me to increase the complexity with keypad
 void keyPressed() {
+  if (key == '0') {
+    lastKey=0;
+  }
   if (key == '1') {
     lastKey=1;
   }
-  else {
-    lastKey=0;
-    background(255);
+  if (key == '2') {
+    lastKey=2;
   }
-
-
-  //  if (key == CODED) {
-  //    if (keyCode == UP) {
-  //      fillVal = 255;
-  //    } else if (keyCode == DOWN) {
-  //      fillVal = 0;
-  //    } 
-  //  } else {
-  //    fillVal = 126;
-  //  }
+  if (key== '3') {
+    lastKey=3;
+  }
+  background(255);
 }
 
-
+//  if (key == CODED) {
+//    if (keyCode == UP) {
+//      fillVal = 255;
+//    } else if (keyCode == DOWN) {
+//      fillVal = 0;
+//    } 
+//  } else {
+//    fillVal = 126;
+//  }
 
 
 
