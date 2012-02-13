@@ -12,7 +12,9 @@
  Add faceControl to replace perlin noise
  
  TODO:
- ____print directions
+ DONE____print directions
+ ____add 6 spiral
+ 
  ____add toggle for perlin noise for each
  ____add toggle for lines
  ____add toggle for faceControl to function
@@ -50,10 +52,15 @@ float aVelocity = .05;
 float amplitudeX = 200;
 float amplitudeY = 200;
 float theta = 0;
+float spiralTheta = 0;
+float spiralSize =1;
+float spiralAcceleration = .01;
 
 int lastKey = 0;
 boolean showLines = false;
 boolean mouseVelocity = false;
+boolean mouseYspiralAcceleration = false;
+boolean faceControl = false;
 
 void setup () {
   size (750, 750);
@@ -63,10 +70,12 @@ void setup () {
 
   centerX = width/2;
   centerY = height/2;
+
+  printDirections();
 }
 
 void draw () {
-  //draw the semiTransparent rectangle on top
+
   semiTransparent();
 
   //returns the velocity (either mouseControlled or hardCoded depending on 'v' keyPress
@@ -96,10 +105,17 @@ void draw () {
   if (lastKey == 5) {
     drawCircleQuad(location, centerCircle); // this time add noise
   }
+  if (lastKey == 6) {
+    drawSpiral(location, centerCircle); // this time add noise
+  }
 }
 
-
 //Start the Machine
+void printDirections() {
+  println("Controls:  animation = 1-6  :  showLines = SpaceBar    :   mouseX Velocity = 'v'  :  mouseY Sprial = 's'");
+println("faceControl = 'f'");
+}
+
 void semiTransparent() {
   rectMode(CORNER);
   noStroke();
@@ -112,19 +128,15 @@ void semiTransparent() {
 //calculate Variable velocity.  take Angular Velocity as an argument
 float calcVelocity(float aVelocity) { 
   float velocity = aVelocity;
-
   //if boolean for mouse controlled velocity is false, then return the standard velocity
   if (mouseVelocity == false) {
   }
-
   //if boolean for mouse control is true, then set velocity
   if (mouseVelocity == true) {  
-    velocity = map(mouseX, 0, width, -1,1);
+    velocity = map(mouseX, 0, width, -1, 1);
   }
-
   return velocity;
 }
-
 
 // This function takes 4 argumments and returns 1 PVector
 PVector calculateCircle (PVector angularVelocity, PVector amplitude) {
@@ -204,6 +216,28 @@ void drawCircleQuad (PVector location, PVector centerCircle) {
   }
 }
 
+//Do '6': draw the circle from points
+void drawSpiral (PVector location, PVector centerCircle) {
+  translate (centerCircle.x, centerCircle.y);
+  ellipse (0, 0, amplitudeX *.5, amplitudeY*.5); 
+  point (0, 0);
+  //create the spiraling for loop.  use absolute value to determine boundary conditions.
+  //use spiralTheta as a SCALAR
+  if (mouseYspiralAcceleration) {
+    spiralAcceleration = map(mouseY, 0, height, .001, 1);
+  }
+  spiralTheta = spiralTheta+ spiralSize * spiralAcceleration;
+  if (abs(spiralTheta) > 2) {
+    spiralSize =spiralSize*-1;
+  }
+  location.mult(spiralTheta);
+  point (location.x, location.y);
+  if (showLines) {
+    line(0, 0, location.x, location.y);
+  }
+}
+
+
 // this allows me to increase the complexity with keypad
 void keyPressed() {
   if (key == '0') {
@@ -224,11 +258,20 @@ void keyPressed() {
   if (key =='5') {
     lastKey=5;
   }
+  if (key == '6') {
+    lastKey=6;
+  }
   if (key == ' ') {
     showLines = !showLines;
   }
   if (key == 'v') {
     mouseVelocity = !mouseVelocity;
+  }
+  if (key == 's') {
+    mouseYspiralAcceleration = !mouseYspiralAcceleration;
+  }
+  if (key == 'f') {
+    faceControl = !faceControl;
   }
 }
 
