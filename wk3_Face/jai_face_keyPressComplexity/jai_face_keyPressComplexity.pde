@@ -36,6 +36,7 @@
  locationY = amplitude * sin (angle); // where sin(angle) = 0-1
  
  */
+ 
 
 PVector amplitude;
 PVector location;
@@ -85,6 +86,8 @@ void draw () {
   PVector angularVelocity = new PVector (angle, varVelocity); //stores initial angle and the deltaAngle
   PVector amplitude = new PVector (amplitudeX, amplitudeY); //stores the maxX maxY (aka radius)
 
+//set location and centerCircle PVectors w/o faceControl
+
   //this PVector holds the return value of the calculation function, which sends radius and velocity info to calc
   PVector location = calculateCircle(angularVelocity, amplitude);
   //figure out where the translation of the entire circle
@@ -108,6 +111,7 @@ void draw () {
   if (lastKey == 6) {
     drawSpiral(location, centerCircle); // this time add noise
   }
+ 
 }
 
 //Start the Machine
@@ -272,6 +276,12 @@ void keyPressed() {
   }
   if (key == 'f') {
     faceControl = !faceControl;
+  }
+  
+  if (key == CODED) {
+    if (keyCode == SHIFT){
+    lastKey=1;
+  }
   }
 }
 
